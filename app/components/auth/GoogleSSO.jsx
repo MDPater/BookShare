@@ -14,7 +14,7 @@ export default function GoogleSSO() {
   return (
     <GoogleSigninButton
       size={GoogleSigninButton.Size.Wide}
-      color={GoogleSigninButton.Color.Dark}
+      color={GoogleSigninButton.Color.Light}
       onPress={async () => {
         try {
           await GoogleSignin.hasPlayServices()

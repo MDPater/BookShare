@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextInput } from "react-native-paper";
+import { Button, TextInput, Divider } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../utils/supabase";
@@ -92,7 +92,7 @@ export default function Auth() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Divider />
       </View>
-      <View style={styles.verticallySpaced}>
+      <View style={[styles.verticallySpaced, { alignSelf: 'center' }]}>
         <GoogleSSO />
       </View>
     </View>
