@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
+import { Button, TextInput } from 'react-native';
 import { Alert, StyleSheet, View } from 'react-native'
 import { supabase } from '../utils/supabase'
-import { Button, Input } from '@rneui/themed'
-import GoogleSSO from '../components/auth/GoogleSSO'
 
 export default function Auth() {
   const [email, setEmail] = useState('')
@@ -38,7 +37,7 @@ export default function Auth() {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input
+        <TextInput
           label="Email"
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
           onChangeText={(text) => setEmail(text)}
@@ -48,7 +47,7 @@ export default function Auth() {
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
+        <TextInput
           label="Password"
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
           onChangeText={(text) => setPassword(text)}
@@ -64,8 +63,6 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
-
-      <GoogleSSO></GoogleSSO>
     </View>
   )
 }
