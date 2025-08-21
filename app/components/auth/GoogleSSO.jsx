@@ -2,14 +2,14 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from '@react-native-google-signin/google-signin'
-import { supabase } from '../../utils/supabase'
+} from "@react-native-google-signin/google-signin";
+import { supabase } from "../../utils/supabase";
 
 export default function GoogleSSO() {
   GoogleSignin.configure({
-    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+    scopes: ["https://www.googleapis.com/auth/drive.readonly"],
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
-  })
+  });
 
   return (
     <GoogleSigninButton
@@ -17,16 +17,16 @@ export default function GoogleSSO() {
       color={GoogleSigninButton.Color.Light}
       onPress={async () => {
         try {
-          await GoogleSignin.hasPlayServices()
-          const userInfo = await GoogleSignin.signIn()
+          await GoogleSignin.hasPlayServices();
+          const userInfo = await GoogleSignin.signIn();
           if (userInfo.data.idToken) {
             const { data, error } = await supabase.auth.signInWithIdToken({
-              provider: 'google',
+              provider: "google",
               token: userInfo.data.idToken,
-            })
-            console.log(error, data)
+            });
+            console.log(error, data);
           } else {
-            throw new Error('no ID token present!')
+            throw new Error("no ID token present!");
           }
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -36,10 +36,11 @@ export default function GoogleSSO() {
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
           } else {
+            console.log(error);
             // some other error happened
           }
         }
       }}
     />
-  )
+  );
 }
