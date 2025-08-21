@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "com.mxa.f1.BookShare",
     "name": "BookShare",
     "slug": "BookShare",
     "version": "1.0.0",

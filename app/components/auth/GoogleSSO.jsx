@@ -7,7 +7,7 @@ import { supabase } from "../../utils/supabase";
 
 export default function GoogleSSO() {
   GoogleSignin.configure({
-    scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+    scopes: ["profile", "email"],
     webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
   });
 
