@@ -3,13 +3,20 @@ import React, { useState } from "react";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../utils/supabase";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export default function Home({ session }) {
   const [loading, setLoading] = useState(false);
 
   async function signOut() {
     setLoading(true);
-    const { error } = await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut();
+    await GoogleSignin.revokeAccess(); // optional but recommended
+    await GoogleSignin.signOut();
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

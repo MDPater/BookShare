@@ -1,14 +1,59 @@
 import React, { useState } from "react";
 import { Button, TextInput, Divider } from "react-native-paper";
+import { makeRedirectUri } from "expo-auth-session";
+import * as QueryParams from "expo-auth-session/build/QueryParams";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 import { FontAwesome } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../utils/supabase";
 import GoogleSSO from "../components/auth/GoogleSSO";
 
+const [loading, setLoading] = useState(false);
+
+WebBrowser.maybeCompleteAuthSession();
+const redirectTo = makeRedirectUri();
+
+const createSessionFromUrl = async (url) => {
+  const { params, errorCode } = QueryParams.getQueryParams(url);
+  if (errorCode) throw new Error(errorCode);
+
+  const { access_token, refresh_token } = params;
+
+  if (!access_token) return;
+
+  const { data, error } = await supabase.auth.setSession({
+    access_token,
+    refresh_token,
+  });
+  if (error) throw error;
+  return data.session;
+};
+
+const signUpWithEmail = async () => {
+  setLoading(true);
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      emailRedirectTo: redirectTo,
+    },
+  });
+
+  if (error) Alert.alert(error.message);
+  if (!session) Alert.alert("Please check your inbox for email verification!");
+  setLoading(false);
+};
+
 export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const url = Linking.useURL();
+  if (url) createSessionFromUrl(url);
 
   async function signInWithEmail() {
     setLoading(true);
@@ -18,22 +63,6 @@ export default function Auth() {
     });
 
     if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
-
-  async function signUpWithEmail() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
   }
 
@@ -92,7 +121,7 @@ export default function Auth() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Divider />
       </View>
-      <View style={[styles.verticallySpaced, { alignSelf: 'center' }]}>
+      <View style={[styles.verticallySpaced, { alignSelf: "center" }]}>
         <GoogleSSO />
       </View>
     </View>
