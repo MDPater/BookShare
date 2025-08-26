@@ -1,5 +1,8 @@
 import React from "react";
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import { supabase } from "../../utils/supabase";
 import { Button } from "react-native-paper";
 import { Image, StyleSheet, View } from "react-native";

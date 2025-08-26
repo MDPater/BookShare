@@ -33,6 +33,8 @@ export default function SignIn() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput
           label="Email"
+          mode="outlined"
+          theme={{ roundness: 25 }}
           left={
             <TextInput.Icon
               icon={() => <FontAwesome name="envelope" size={20} />}
@@ -47,6 +49,8 @@ export default function SignIn() {
       <View style={styles.verticallySpaced}>
         <TextInput
           label="Password"
+          mode="outlined"
+          theme={{ roundness: 25 }}
           left={
             <TextInput.Icon
               icon={() => <FontAwesome name="lock" size={20} />}

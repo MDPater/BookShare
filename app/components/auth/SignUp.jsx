@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, TextInput, Divider } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { Alert, StyleSheet, View } from "react-native";
-import { supabase } from "../utils/supabase";
+import { supabase } from "../../utils/supabase";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ export default function SignUp() {
       email: email,
       password: password,
       options: {
-        emailRedirectTo: null,
+        emailRedirectTo: "bookshare://",
       },
     });
 
@@ -33,6 +33,8 @@ export default function SignUp() {
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TextInput
           label="Email"
+          mode="outlined"
+          theme={{ roundness: 25 }}
           left={
             <TextInput.Icon
               icon={() => <FontAwesome name="envelope" size={20} />}
@@ -47,6 +49,8 @@ export default function SignUp() {
       <View style={styles.verticallySpaced}>
         <TextInput
           label="Password"
+          mode="outlined"
+          theme={{ roundness: 25 }}
           left={
             <TextInput.Icon
               icon={() => <FontAwesome name="lock" size={20} />}
