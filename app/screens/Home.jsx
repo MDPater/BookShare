@@ -1,21 +1,24 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Button } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "../utils/supabase";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
-export default function Home({ session }) {
+import { useApp } from "../utils/AppContext";
+
+export default function Home() {
+  const { session } = useApp();
+
   const [loading, setLoading] = useState(false);
 
   async function signOut() {
     setLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
-    await GoogleSignin.revokeAccess(); // optional but recommended
-    await GoogleSignin.signOut();
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
@@ -23,9 +26,9 @@ export default function Home({ session }) {
     <View style={styles.container}>
       <Text>{session.user.id}</Text>
       <Button
-        mode="contained" // Use 'contained' for a filled button
-        loading={loading} // `loading` prop directly corresponds to your `loading` state
-        disabled={loading} // The `disabled` prop works the same way
+        mode="contained"
+        loading={loading}
+        disabled={loading}
         onPress={() => signOut()}
       >
         Sign out
