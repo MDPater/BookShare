@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { TabView } from "react-native-tab-view";
+import ThemedText from "../components/ui/ThemedText";
 
 import GoogleSSO from "../components/auth/GoogleSSO";
 import SignIn from "../components/auth/SignIn";
@@ -44,11 +45,11 @@ export default function Auth() {
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       {/* Header */}
       <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Welcome to BookShare</Text>
-        <Text style={styles.headerSubtitle}>
+        <ThemedText style={styles.headerTitle}>Welcome to BookShare</ThemedText>
+        <ThemedText style={styles.headerSubtitle}>
           Sort your books, track your reading, and see your progress all in one
           place.
-        </Text>
+        </ThemedText>
       </View>
 
       {/* TabView */}
@@ -105,7 +106,7 @@ export default function Auth() {
       {/* Divider */}
       <View style={[styles.orContainer, styles.mt20]}>
         <Divider style={{ flex: 1, height: 1 }} />
-        <Text style={styles.orText}>OR</Text>
+        <ThemedText style={styles.orText}>OR</ThemedText>
         <Divider style={{ flex: 1, height: 1 }} />
       </View>
 
@@ -145,7 +146,6 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 14,
-    color: "#555",
     textAlign: "center",
     paddingHorizontal: 16,
   },
@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
   },
   orText: {
     marginHorizontal: 8,
-    color: "#666",
     fontWeight: "bold",
   },
 });

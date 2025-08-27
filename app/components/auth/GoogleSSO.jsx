@@ -73,14 +73,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    borderRadius: 25,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    backgroundColor: "#fff",
     elevation: 2, // subtle shadow
   },
   label: {
-    color: "#000",
     fontWeight: "600",
   },
   icon: {

@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { Button, TextInput, Dialog, Portal, Text } from "react-native-paper";
+import {
+  Button,
+  TextInput,
+  Dialog,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { supabase } from "../../utils/supabase";
+import ThemedText from "../ui/ThemedText";
 
 export default function SignUp() {
+  const theme = useTheme();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,10 +129,14 @@ export default function SignUp() {
       </View>
       {/* Alert Box on Error*/}
       <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
+        <Dialog
+          visible={visible}
+          onDismiss={hideDialog}
+          style={{ backgroundColor: theme.colors.dialog }} // ✅ uses our custom color
+        >
           <Dialog.Title>{errorTtl}</Dialog.Title>
           <Dialog.Content>
-            <Text>{errorMsg}</Text>
+            <ThemedText>{errorMsg}</ThemedText>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={hideDialog}>OK</Button>
