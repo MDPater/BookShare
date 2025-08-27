@@ -2,7 +2,11 @@ import "react-native-url-polyfill/auto";
 import { useState, useEffect } from "react";
 import { supabase } from "./app/utils/supabase";
 import { View } from "react-native";
-import { Provider as PaperProvider, DefaultTheme, Portal } from "react-native-paper";
+import {
+  Provider as PaperProvider,
+  DefaultTheme,
+  Portal,
+} from "react-native-paper";
 
 import Home from "./app/screens/Home";
 import Auth from "./app/screens/Auth";

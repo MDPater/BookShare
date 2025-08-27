@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, TextInput, Dialog, Portal, Text } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { supabase } from "../../utils/supabase";

@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
-import { Text, Divider, TouchableRipple } from "react-native-paper";
+import React, { useState } from "react";
+import { Text, Divider, TouchableRipple, useTheme } from "react-native-paper";
 import {
   StyleSheet,
   View,
   ScrollView,
   useWindowDimensions,
 } from "react-native";
-import { TabView, TabBar } from "react-native-tab-view";
+import { TabView } from "react-native-tab-view";
 
 import GoogleSSO from "../components/auth/GoogleSSO";
 import SignIn from "../components/auth/SignIn";
@@ -14,6 +14,7 @@ import SignUp from "../components/auth/SignUp";
 
 export default function Auth() {
   const layout = useWindowDimensions();
+  const theme = useTheme();
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -64,7 +65,8 @@ export default function Auth() {
                 flexDirection: "row",
                 borderRadius: 25,
                 overflow: "hidden",
-                backgroundColor: "#f6f6f6",
+                backgroundColor: theme.colors.surface, // dynamic background
+                elevation: 2, // optional shadow
               }}
             >
               {props.navigationState.routes.map((route, i) => {
@@ -76,13 +78,17 @@ export default function Auth() {
                     style={{
                       flex: 1,
                       paddingVertical: 12,
-                      backgroundColor: focused ? "#6200ee" : "transparent",
+                      backgroundColor: focused
+                        ? theme.colors.primary
+                        : "transparent",
                       alignItems: "center",
                     }}
                   >
                     <Text
                       style={{
-                        color: focused ? "#fff" : "#6200ee",
+                        color: focused
+                          ? theme.colors.onPrimary // text color on primary
+                          : theme.colors.primary, // primary color for unfocused
                         fontWeight: "bold",
                       }}
                     >

@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { Button, TextInput, Divider } from "react-native-paper";
+import { Button, TextInput, Dialog, Portal, Text } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
-import { Alert, StyleSheet, View, ScrollView } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { supabase } from "../../utils/supabase";
 
 export default function SignUp() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const [visible, setVisible] = useState(false); // State for Dialog visibility
+  const [errorTtl, setErrorTtl] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const hideDialog = () => setVisible(false);
 
   const signUpWithEmail = async () => {
     setLoading(true);
@@ -19,18 +26,44 @@ export default function SignUp() {
       password: password,
       options: {
         emailRedirectTo: "bookshare://",
+        data: {
+          username: username,
+        },
       },
     });
 
-    if (error) Alert.alert(error.message);
-    if (!error && !session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (error) {
+      setErrorTtl("Error");
+      setErrorMsg(error.message);
+      setVisible(true);
+    }
+    if (!error && !session) {
+      setErrorTtl("Success");
+      setErrorMsg("Please check your inbox for email verification!");
+      setVisible(true);
+    }
     setLoading(false);
   };
 
   return (
     <View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
+        <TextInput
+          label="Username"
+          mode="outlined"
+          theme={{ roundness: 25 }}
+          left={
+            <TextInput.Icon
+              icon={() => <FontAwesome name="user" size={20} />}
+            />
+          }
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          placeholder="your.username"
+          autoCapitalize={"none"}
+        />
+      </View>
+      <View style={[styles.verticallySpaced]}>
         <TextInput
           label="Email"
           mode="outlined"
@@ -56,14 +89,25 @@ export default function SignUp() {
               icon={() => <FontAwesome name="lock" size={20} />}
             />
           }
+          right={
+            <TextInput.Icon
+              icon={() => (
+                <FontAwesome
+                  name={passwordVisible ? "eye" : "eye-slash"}
+                  size={20}
+                />
+              )}
+              onPress={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on press
+            />
+          }
           onChangeText={(text) => setPassword(text)}
           value={password}
-          secureTextEntry={true}
+          secureTextEntry={!passwordVisible}
           placeholder="Password"
           autoCapitalize={"none"}
         />
       </View>
-      <View style={styles.verticallySpaced}>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           mode="contained"
           loading={loading}
@@ -73,6 +117,18 @@ export default function SignUp() {
           Sign up
         </Button>
       </View>
+      {/* Alert Box on Error*/}
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>{errorTtl}</Dialog.Title>
+          <Dialog.Content>
+            <Text>{errorMsg}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 }

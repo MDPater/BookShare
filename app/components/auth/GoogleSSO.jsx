@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   GoogleSignin,
   statusCodes,
@@ -8,6 +8,8 @@ import { Button } from "react-native-paper";
 import { Image, StyleSheet, View } from "react-native";
 
 export default function GoogleSSO() {
+  const [loading, setLoading] = useState(false);
+
   GoogleSignin.configure({
     scopes: ["profile", "email"],
     offlineAccess: true,
@@ -15,6 +17,7 @@ export default function GoogleSSO() {
   });
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
@@ -38,6 +41,8 @@ export default function GoogleSSO() {
       } else {
         console.error("Google sign-in error:", error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,6 +51,8 @@ export default function GoogleSSO() {
       <Button
         mode="contained"
         onPress={handleGoogleSignIn}
+        loading={loading}
+        disabled={loading}
         icon={() => (
           <Image
             source={{ uri: "https://img.icons8.com/color/48/google-logo.png" }}
