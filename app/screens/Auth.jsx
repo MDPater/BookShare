@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { Text, Divider } from "react-native-paper";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import React, { useState, useRef } from "react";
+import { Text, Divider, TouchableRipple } from "react-native-paper";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
+import { TabView, TabBar } from "react-native-tab-view";
 
 import GoogleSSO from "../components/auth/GoogleSSO";
 import SignIn from "../components/auth/SignIn";
@@ -16,15 +21,27 @@ export default function Auth() {
     { key: "signUp", title: "Sign Up" },
   ]);
 
-  // Map each tab to a component
-  const renderScene = SceneMap({
-    signIn: SignIn,
-    signUp: SignUp,
-  });
+  const [tabHeights, setTabHeights] = useState({}); // store height of each scene
+
+  const renderScene = ({ route }) => {
+    const SceneComponent = route.key === "signIn" ? SignIn : SignUp;
+    return (
+      <View
+        onLayout={(event) => {
+          const height = event.nativeEvent.layout.height;
+          setTabHeights((prev) => ({ ...prev, [route.key]: height }));
+        }}
+      >
+        <SceneComponent />
+      </View>
+    );
+  };
+
+  const currentHeight = tabHeights[routes[index].key] || 200; // fallback height
 
   return (
-    <View style={styles.container}>
-      {/* Sign-in form */}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {/* Header */}
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Welcome to BookShare</Text>
         <Text style={styles.headerSubtitle}>
@@ -33,30 +50,51 @@ export default function Auth() {
         </Text>
       </View>
 
-      {/* TabView slider */}
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: layout.width }}
-        renderTabBar={(props) => (
-          <TabBar
-            {...props}
-            indicatorStyle={{ backgroundColor: "#6200ee" }}
-            style={{ backgroundColor: "white" }}
-            renderLabel={({ route, focused }) => (
-              <Text
-                style={{
-                  color: focused ? "#6200ee" : "#888",
-                  fontWeight: "bold",
-                }}
-              >
-                {route.title}
-              </Text>
-            )}
-          />
-        )}
-      />
+      {/* TabView */}
+      <View style={[styles.tabContainer, { height: currentHeight + 48 }]}>
+        {/* +48 for TabBar height */}
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          renderTabBar={(props) => (
+            <View
+              style={{
+                flexDirection: "row",
+                borderRadius: 25,
+                overflow: "hidden",
+                backgroundColor: "#f6f6f6",
+              }}
+            >
+              {props.navigationState.routes.map((route, i) => {
+                const focused = index === i;
+                return (
+                  <TouchableRipple
+                    key={route.key}
+                    onPress={() => setIndex(i)}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 12,
+                      backgroundColor: focused ? "#6200ee" : "transparent",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: focused ? "#fff" : "#6200ee",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {route.title}
+                    </Text>
+                  </TouchableRipple>
+                );
+              })}
+            </View>
+          )}
+        />
+      </View>
 
       {/* Divider */}
       <View style={[styles.orContainer, styles.mt20]}>
@@ -66,22 +104,20 @@ export default function Auth() {
       </View>
 
       {/* Google login */}
-      <View
-        style={[
-          styles.verticallySpaced && styles.mt40,
-          { alignSelf: "center" },
-        ]}
-      >
+      <View style={[styles.verticallySpaced, styles.mt20]}>
         <GoogleSSO />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
+  scrollContainer: {
     padding: 12,
+    paddingBottom: 40,
+  },
+  tabContainer: {
+    alignSelf: "stretch",
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -91,11 +127,8 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  mt40: {
-    marginTop: 30,
-  },
   headerContainer: {
-    marginTop: 30,
+    marginTop: 60,
     marginBottom: 30,
     alignItems: "center",
   },

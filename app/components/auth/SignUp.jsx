@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextInput, Divider } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, ScrollView } from "react-native";
 import { supabase } from "../../utils/supabase";
 
 export default function SignUp() {

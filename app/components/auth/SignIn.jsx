@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { Button, TextInput, Dialog, Portal, Text } from "react-native-paper";
 import { FontAwesome } from "@expo/vector-icons";
 import { supabase } from "../../utils/supabase";
@@ -84,7 +84,6 @@ export default function SignIn() {
           Sign in
         </Button>
       </View>
-
       {/* Alert Box on Error*/}
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
