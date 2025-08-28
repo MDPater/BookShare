@@ -8,7 +8,7 @@ export const LightTheme = {
     ...PaperDefaultTheme.colors,
     primary: "#6200ee",
     accent: "#03dac4",
-    background: "#ffffff",
+    background: "#f0f0f0",
     surface: "#ffffff",
     surfaceVariant: "#f2f2f7",
     dialog: "#ffffff",

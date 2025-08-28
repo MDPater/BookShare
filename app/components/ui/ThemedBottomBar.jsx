@@ -20,7 +20,7 @@ const BAR_PADDING_HORIZONTAL = 5;
 
 export default function Home() {
   const { theme } = useApp();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
 
   const routes = [
     { key: "feed", title: "Home", icon: "home", component: Feed },
