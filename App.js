@@ -5,6 +5,7 @@ import { Provider as PaperProvider, Portal } from "react-native-paper";
 
 import Home from "./app/screens/Home";
 import Auth from "./app/screens/Auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function Main() {
   const { session, theme } = useApp();
@@ -23,7 +24,9 @@ function Main() {
 export default function App() {
   return (
     <AppProvider>
-      <Main />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Main />
+      </SafeAreaView>
     </AppProvider>
   );
 }
