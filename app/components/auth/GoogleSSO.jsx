@@ -27,7 +27,6 @@ export default function GoogleSSO() {
           provider: "google",
           token: userInfo.data.idToken,
         });
-        console.log("Supabase:", { data, error });
       } else {
         throw new Error("No ID token present!");
       }

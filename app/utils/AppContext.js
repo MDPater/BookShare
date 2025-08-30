@@ -6,10 +6,13 @@ import { supabase } from "../utils/supabase";
 
 const AppContext = createContext();
 
-const DEFAULT_SETTINGS = { preferredTheme: "system" };
+const DEFAULT_SETTINGS = {
+  preferredTheme: "system",
+};
 
 export const AppProvider = ({ children }) => {
   const [session, setSession] = useState(null);
+  const [user, setUser] = useState(null);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loadingSettings, setLoadingSettings] = useState(true);
 
@@ -64,9 +67,40 @@ export const AppProvider = ({ children }) => {
   // Optionally, don't render children until settings are loaded
   if (loadingSettings) return null;
 
+  // Fetch user data when session changes
+  if (session && !user) {
+    fetchUserProfile()
+      .then((data) => setUser(data))
+      .catch(console.error);
+
+    console.log("Session:", session);
+  }
+
+  async function fetchUserProfile() {
+    const { data, error, status } = await supabase
+      .from("profiles")
+      .select(`username, bio, avatar_url, full_name`)
+      .eq("id", session?.user.id)
+      .single();
+    if (error && status !== 406) {
+      throw error;
+    }
+
+    console.log("user profile:", data);
+    return data;
+  }
+
   return (
     <AppContext.Provider
-      value={{ session, setSession, settings, setSettings, theme }}
+      value={{
+        session,
+        setSession,
+        user,
+        setUser,
+        settings,
+        setSettings,
+        theme,
+      }}
     >
       {children}
     </AppContext.Provider>
