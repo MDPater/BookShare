@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Avatar, Divider } from "react-native-paper";
 import ThemedText from "../../components/ui/ThemedText";
 
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -25,19 +25,75 @@ export default function Profile() {
 
   return (
     <View style={styles.rootContainer}>
-      <ThemedText style={styles.usernameText}>{user.username}</ThemedText>
+      {/* Profile Header */}
+      <View style={styles.header}>
+        {user.avatar_url ? (
+          <Avatar.Image
+            size={80}
+            source={{ uri: user.avatar_url }}
+            style={styles.avatar}
+          />
+        ) : (
+          <Avatar.Text
+            size={80}
+            label={user.username ? user.username.charAt(0).toUpperCase() : ""}
+            style={styles.avatar}
+          />
+        )}
+        <View style={styles.userInfo}>
+          <ThemedText style={styles.usernameText}>{user.username}</ThemedText>
+          {user.full_name ? (
+            <ThemedText style={styles.fullNameText}>
+              {user.full_name}
+            </ThemedText>
+          ) : null}
+        </View>
+      </View>
 
-      {/*Logout  */}
-      <View style={styles.container}>
-        <ThemedText>{session.user.id}</ThemedText>
+      {/* Bio */}
+      {user.bio ? (
+        <ThemedText style={styles.bioText}>{user.bio}</ThemedText>
+      ) : null}
+
+      {/* Follower/Following/Posts stats */}
+      <View style={styles.statsContainer}>
+        {/* Placeholder for stats */}
+        <ThemedText style={styles.statsText}>
+          <ThemedText style={styles.statsCount}>120</ThemedText> posts
+        </ThemedText>
+        <ThemedText style={styles.statsText}>
+          <ThemedText style={styles.statsCount}>500</ThemedText> followers
+        </ThemedText>
+        <ThemedText style={styles.statsText}>
+          <ThemedText style={styles.statsCount}>320</ThemedText> following
+        </ThemedText>
+      </View>
+
+      {/* Edit Profile and Sign Out Buttons */}
+      <View style={styles.buttonContainer}>
+        <Button
+          mode="outlined"
+          onPress={() => console.log("Edit Profile")}
+          style={styles.button}
+        >
+          Edit Profile
+        </Button>
         <Button
           mode="contained"
           loading={loading}
           disabled={loading}
           onPress={() => signOut()}
+          style={styles.button}
         >
           Sign out
         </Button>
+      </View>
+
+      <Divider style={styles.mt20}></Divider>
+
+      {/* User ID */}
+      <View style={styles.container}>
+        <ThemedText>{session.user.id}</ThemedText>
       </View>
     </View>
   );
@@ -47,19 +103,53 @@ const styles = StyleSheet.create({
   rootContainer: {
     padding: 16,
   },
-  container: {
-    marginTop: 40,
-    padding: 12,
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  avatar: {
+    marginRight: 20,
+  },
+  userInfo: {
+    justifyContent: "center",
   },
   usernameText: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 6,
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  fullNameText: {
+    fontSize: 16,
+    color: "#888",
+    marginBottom: 5,
+  },
+  bioText: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
+  statsText: {
+    fontSize: 14,
+    color: "#555",
+  },
+  statsCount: {
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  container: {
+    marginTop: 40,
+    padding: 12,
   },
   mt20: {
     marginTop: 20,
