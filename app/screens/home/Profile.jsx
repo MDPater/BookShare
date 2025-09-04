@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, Avatar, Divider } from "react-native-paper";
+import { Button, Avatar, Divider, IconButton } from "react-native-paper";
 import ThemedText from "../../components/ui/ThemedText";
+import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { supabase } from "../../utils/supabase";
 import { useApp } from "../../utils/AppContext";
 
 export default function Profile() {
-  const { session, user, setUser } = useApp();
+  const { session, user, setUser, theme } = useApp();
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
 
   async function signOut() {
     setLoading(true);
@@ -25,6 +28,15 @@ export default function Profile() {
 
   return (
     <View style={styles.rootContainer}>
+      {/* Settings Button */}
+      <IconButton
+        icon={() => (
+          <FontAwesome name="cog" size={24} color={theme.colors.text} />
+        )}
+        onPress={() => navigation.navigate("Settings")}
+        style={styles.settingsButton}
+      />
+
       {/* Profile Header */}
       <View style={styles.header}>
         {user.avatar_url ? (
@@ -59,13 +71,14 @@ export default function Profile() {
       <View style={styles.statsContainer}>
         {/* Placeholder for stats */}
         <ThemedText style={styles.statsText}>
-          <ThemedText style={styles.statsCount}>120</ThemedText> posts
+          <ThemedText style={styles.statsCount}>120</ThemedText> Books read
         </ThemedText>
         <ThemedText style={styles.statsText}>
-          <ThemedText style={styles.statsCount}>500</ThemedText> followers
+          <ThemedText style={styles.statsCount}>500</ThemedText> Books in
+          Library
         </ThemedText>
         <ThemedText style={styles.statsText}>
-          <ThemedText style={styles.statsCount}>320</ThemedText> following
+          <ThemedText style={styles.statsCount}>420</ThemedText> BookWorms
         </ThemedText>
       </View>
 
@@ -73,7 +86,7 @@ export default function Profile() {
       <View style={styles.buttonContainer}>
         <Button
           mode="outlined"
-          onPress={() => console.log("Edit Profile")}
+          onPress={() => navigation.navigate("EditProfile")}
           style={styles.button}
         >
           Edit Profile
@@ -84,6 +97,7 @@ export default function Profile() {
           disabled={loading}
           onPress={() => signOut()}
           style={styles.button}
+          buttonColor={theme.colors.error}
         >
           Sign out
         </Button>
@@ -93,6 +107,7 @@ export default function Profile() {
 
       {/* User ID */}
       <View style={styles.container}>
+        <ThemedText>User ID:</ThemedText>
         <ThemedText>{session.user.id}</ThemedText>
       </View>
     </View>
@@ -102,11 +117,19 @@ export default function Profile() {
 const styles = StyleSheet.create({
   rootContainer: {
     padding: 16,
+    position: "relative",
+  },
+  settingsButton: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    zIndex: 1,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    marginTop: 20,
   },
   avatar: {
     marginRight: 20,

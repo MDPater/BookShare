@@ -1,4 +1,3 @@
-// themes.js
 import { DefaultTheme as PaperDefaultTheme } from "react-native-paper";
 
 export const LightTheme = {
