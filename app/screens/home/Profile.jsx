@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
     marginTop: 20,
   },
   avatar: {
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
   },
   bioText: {
     fontSize: 14,
-    marginBottom: 10,
+    marginBottom: 30,
   },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
-    marginBottom: 20,
+    marginBottom: 30,
   },
   statsText: {
     fontSize: 14,

@@ -19,6 +19,7 @@ import ThemedText from "../../../components/ui/ThemedText";
 
 import { useApp } from "../../../utils/AppContext";
 import { supabase } from "../../../utils/supabase";
+import EditAvatar from "../../../components/profile/EditAvatar";
 
 export default function EditProfile() {
   const { session, theme, user, setUser } = useApp();
@@ -106,6 +107,10 @@ export default function EditProfile() {
           contentContainerStyle={styles.centeredContent}
         >
           <View style={styles.formContainer}>
+            <View style={[styles.input, styles.avatarContainer]}>
+              <EditAvatar size={200} url={avatarUrl} />
+            </View>
+
             {/* Email Field */}
             <View style={styles.input}>
               <ThemedText style={styles.inputText}>Email:</ThemedText>
@@ -228,7 +233,9 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: "100%",
-    paddingTop: 100,
+  },
+  avatarContainer: {
+    alignItems: "center",
   },
   inputText: {
     paddingLeft: 15,
