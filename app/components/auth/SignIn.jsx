@@ -98,7 +98,7 @@ export default function SignIn() {
         <Dialog
           visible={visible}
           onDismiss={hideDialog}
-          style={{ backgroundColor: theme.colors.dialog }} // ✅ uses our custom color
+          style={{ backgroundColor: theme.colors.dialog }}
         >
           <Dialog.Title>Error</Dialog.Title>
           <Dialog.Content>
