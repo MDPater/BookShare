@@ -72,8 +72,6 @@ export const AppProvider = ({ children }) => {
     fetchUserProfile()
       .then((data) => setUser(data))
       .catch(console.error);
-
-    console.log("Session:", session);
   }
 
   async function fetchUserProfile() {
@@ -85,8 +83,6 @@ export const AppProvider = ({ children }) => {
     if (error && status !== 406) {
       throw error;
     }
-
-    console.log("user profile:", data);
     return data;
   }
 

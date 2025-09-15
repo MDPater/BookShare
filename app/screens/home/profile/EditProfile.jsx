@@ -63,13 +63,21 @@ export default function EditProfile() {
         avatar_url: avatarUrl,
         updated_at: new Date(),
       };
-      const { error } = await supabase.from("profiles").upsert(updates);
+      const { data, error } = await supabase.from("profiles").upsert(updates);
 
       if (error) {
         throw error;
       }
 
-      setUser((prev) => ({ ...prev, full_name: fullName, username, bio }));
+      setUser((prev) => ({
+        ...prev,
+        full_name: fullName,
+        username,
+        bio,
+        avatar_url: avatarUrl,
+      }));
+
+      console.log("update: ", data);
       setDialogTtl("Success");
       setDialogMsg("Profile updated successfully!");
       setVisible(true);
@@ -108,7 +116,15 @@ export default function EditProfile() {
         >
           <View style={styles.formContainer}>
             <View style={[styles.input, styles.avatarContainer]}>
-              <EditAvatar size={200} url={avatarUrl} />
+              <EditAvatar
+                size={200}
+                url={avatarUrl}
+                onUpload={(url) => {
+                  setAvatarUrl(url);
+                  updateProfile;
+                  console.log(user);
+                }}
+              />
             </View>
 
             {/* Email Field */}

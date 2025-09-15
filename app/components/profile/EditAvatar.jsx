@@ -7,7 +7,7 @@ import { supabase } from "../../utils/supabase";
 import { useApp } from "../../utils/AppContext";
 import ThemedText from "../ui/ThemedText";
 
-export default function EditAvatar({ url, size }) {
+export default function EditAvatar({ url, size, onUpload }) {
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(null);
 
@@ -50,8 +50,38 @@ export default function EditAvatar({ url, size }) {
         allowsMultipleSelection: false,
         allowsEditing: true,
         quality: 1,
+        aspect: [1, 1],
         exif: false,
       });
+
+      if (result.canceled || !result.assets || result.assets.length === 0) {
+        console.log("User cancelled image picker.");
+        return;
+      }
+
+      const image = result.assets[0];
+
+      if (!image.uri) {
+        throw new Error("No image uri!"); // Realistically, this should never happen, but just in case...
+      }
+      const arraybuffer = await fetch(image.uri).then((res) =>
+        res.arrayBuffer()
+      );
+
+      const fileExt = image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
+      const path = `${Date.now()}.${fileExt}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from("avatars")
+        .upload(path, arraybuffer, {
+          contentType: image.mimeType ?? "image/jpeg",
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      onUpload(data.path);
+      setAvatarUrl(data.path);
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -61,7 +91,7 @@ export default function EditAvatar({ url, size }) {
     <View style={styles.container}>
       <TouchableRipple onPress={selectImage}>
         {avatarUrl ? (
-          <Avatar.Image size={size} source={{ uri: user.avatar_url }} />
+          <Avatar.Image size={size} source={{ uri: avatarUrl }} />
         ) : (
           <Avatar.Text
             size={size}

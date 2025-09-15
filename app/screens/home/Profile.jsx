@@ -12,7 +12,18 @@ import { useApp } from "../../utils/AppContext";
 export default function Profile() {
   const { session, user, setUser, theme } = useApp();
   const [loading, setLoading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatar_url);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (avatarUrl) {
+      if (avatarUrl.includes("googleusercontent.com")) {
+        setAvatarUrl(avatarUrl);
+      } else {
+        downloadImage(avatarUrl);
+      }
+    }
+  }, [avatarUrl]);
 
   async function signOut() {
     setLoading(true);
@@ -23,6 +34,26 @@ export default function Profile() {
       await GoogleSignin.signOut();
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async function downloadImage(path) {
+    try {
+      const { data, error } = await supabase.storage
+        .from("avatars")
+        .download(path);
+
+      if (error) {
+        throw error;
+      }
+
+      const fr = new FileReader();
+      fr.readAsDataURL(data);
+      fr.onload = () => {
+        setAvatarUrl(fr.result);
+      };
+    } catch (error) {
+      console.log("Error downloading image: ", error);
     }
   }
 
@@ -39,10 +70,10 @@ export default function Profile() {
 
       {/* Profile Header */}
       <View style={styles.header}>
-        {user.avatar_url ? (
+        {avatarUrl ? (
           <Avatar.Image
             size={80}
-            source={{ uri: user.avatar_url }}
+            source={{ uri: avatarUrl }}
             style={styles.avatar}
           />
         ) : (
